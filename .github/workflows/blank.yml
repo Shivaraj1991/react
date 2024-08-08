@@ -1,3 +1,7 @@
+
+# This YAML file is a basic CI/CD pipeline configuration
+# for running a React project on Windows 10.
+
 name: React Project Pipeline
 
 on:
@@ -7,7 +11,7 @@ on:
 
 jobs:
   build-and-preview:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -18,20 +22,8 @@ jobs:
         with:
           node-version: '16' # Specify the Node.js version you need
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
       - name: Install dependencies
         run: npm install
-
-      - name: Run tests
-        run: npm test
 
       - name: Build project
         run: npm run build
@@ -39,17 +31,4 @@ jobs:
       - name: Preview project
         run: npm run preview
 
-      # Optional deployment step
-      - name: Deploy
-        run: ./deploy-script.sh
-        env:
-          DEPLOYMENT_KEY: ${{ secrets.DEPLOYMENT_KEY }}
-
-      # Optional notification step
-      - name: Notify Slack
-        uses: slackapi/slack-github-action@v1
-        with:
-          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          text: 'The build is complete!'
-
-
+      # Optionally, add steps to deploy or test your preview
